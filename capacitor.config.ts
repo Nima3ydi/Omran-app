@@ -1,17 +1,12 @@
-import type { CapacitorConfig } from '@capacitor/cli';
+import { CapacitorConfig } from '@capacitor/cli';
 
-// https://capacitorjs.com/docs/config
 const config: CapacitorConfig = {
-    appId: 'com.example.app',
-    appName: 'Example App',
-    webDir: 'dist',
-
-    // ios: {
-    //     iconAssets: []
-    // },
-    // pwa: {
-    //     iconPath: null
-    // }
+  appId: 'ir.omran.app',
+  appName: 'متره و برآورد عمران',
+  webDir: '.',
+  server: {
+    androidScheme: 'https'
+  }
 };
 
 export default config;
