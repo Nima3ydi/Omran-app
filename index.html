@@ -1,0 +1,2130 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>متره و برآورد عمران | مهندس نیما صیدی قمشه</title>
+<style>
+:root {
+  --primary: #0f2744;
+  --primary-light: #1e3a5f;
+  --gold: #d4af37;
+  --gold-light: #fdf6e2;
+  --orange: #ea580c;
+  --orange-light: #fff7ed;
+  --bg: #f4f6f9;
+  --surface: #ffffff;
+  --text-primary: #1e293b;
+  --text-secondary: #64748b;
+  --border: #e2e8f0;
+  --radius: 12px;
+  --shadow: 0 4px 12px rgba(15, 39, 68, 0.08);
+  --shadow-hover: 0 6px 18px rgba(15, 39, 68, 0.14);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Tahoma, Arial, sans-serif;
+}
+
+body {
+  background-color: var(--bg);
+  color: var(--text-primary);
+  font-size: 15px;
+  line-height: 1.6;
+  direction: rtl;
+  overflow-x: hidden;
+  padding-bottom: 75px;
+}
+
+/* --- SPLASH SCREEN --- */
+#splash {
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(145deg, #0f2744 0%, #1a365d 60%, #0b1c30 100%);
+  color: #fff;
+  z-index: 99999;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 24px;
+  transition: opacity 0.6s ease, visibility 0.6s ease;
+}
+
+#splash.hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.crane-icon {
+  width: 90px;
+  height: 90px;
+  margin-bottom: 20px;
+  filter: drop-shadow(0 4px 8px rgba(212, 175, 55, 0.3));
+}
+
+.splash-title {
+  font-size: 26px;
+  font-weight: 800;
+  color: #ffffff;
+  margin-bottom: 8px;
+  letter-spacing: -0.5px;
+}
+
+.splash-badge {
+  display: inline-block;
+  background: rgba(212, 175, 55, 0.2);
+  color: var(--gold);
+  border: 1px solid var(--gold);
+  padding: 4px 14px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 18px;
+}
+
+.splash-author {
+  font-size: 14px;
+  color: #cbd5e1;
+  font-weight: 500;
+}
+
+/* --- TOP HEADER --- */
+header {
+  background: var(--primary);
+  color: #fff;
+  padding: 14px 16px;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.brand-title {
+  font-size: 18px;
+  font-weight: 800;
+  color: #fff;
+}
+
+.brand-sub {
+  font-size: 11px;
+  color: var(--gold);
+  font-weight: 600;
+}
+
+.header-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-icon {
+  background: rgba(255,255,255,0.1);
+  border: none;
+  color: #fff;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-icon:hover {
+  background: rgba(255,255,255,0.2);
+}
+
+/* --- SEARCH & CATEGORY BAR --- */
+.search-container {
+  padding: 12px 16px 6px;
+  background: #fff;
+  border-bottom: 1px solid var(--border);
+}
+
+.search-box {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.search-input {
+  width: 100%;
+  padding: 10px 40px 10px 14px;
+  border: 1.5px solid var(--border);
+  border-radius: 25px;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  background: #f8fafc;
+}
+
+.search-input:focus {
+  border-color: var(--primary);
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(15, 39, 68, 0.1);
+}
+
+.search-icon {
+  position: absolute;
+  right: 14px;
+  color: var(--text-secondary);
+  pointer-events: none;
+}
+
+.categories-bar {
+  display: flex;
+  overflow-x: auto;
+  gap: 8px;
+  padding: 10px 16px;
+  background: #fff;
+  border-bottom: 1px solid var(--border);
+  scrollbar-width: none;
+}
+.categories-bar::-webkit-scrollbar { display: none; }
+
+.cat-chip {
+  flex-shrink: 0;
+  padding: 6px 14px;
+  border-radius: 20px;
+  background: #f1f5f9;
+  border: 1px solid var(--border);
+  color: var(--text-primary);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.cat-chip.active {
+  background: var(--primary);
+  color: #fff;
+  border-color: var(--primary);
+}
+
+/* --- PROJECT PROFILE BANNER --- */
+.profile-card {
+  margin: 14px 16px 4px;
+  background: linear-gradient(135deg, #0f2744 0%, #1e3a5f 100%);
+  color: #fff;
+  border-radius: var(--radius);
+  padding: 16px;
+  box-shadow: var(--shadow);
+}
+
+.profile-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  cursor: pointer;
+}
+
+.profile-badge {
+  background: var(--gold);
+  color: #0f2744;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 12px;
+}
+
+.profile-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 10px;
+  font-size: 13px;
+}
+
+.profile-field label {
+  display: block;
+  font-size: 11px;
+  color: #cbd5e1;
+  margin-bottom: 3px;
+}
+
+.profile-field input, .profile-field select {
+  width: 100%;
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: 1px solid rgba(255,255,255,0.25);
+  background: rgba(255,255,255,0.1);
+  color: #fff;
+  font-size: 13px;
+  outline: none;
+}
+.profile-field select option {
+  background: #0f2744;
+  color: #fff;
+}
+
+.profile-apply-btn {
+  margin-top: 12px;
+  width: 100%;
+  background: var(--gold);
+  color: #0f2744;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 13px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: opacity 0.2s;
+}
+
+/* --- MAIN CONTENT & CARDS --- */
+.container {
+  padding: 12px 16px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 16px 0 10px;
+}
+
+.section-title {
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--primary);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.cards-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* --- CALCULATOR CARD --- */
+.calc-card {
+  background: var(--surface);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border);
+  overflow: hidden;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.calc-card:hover {
+  box-shadow: var(--shadow-hover);
+}
+
+.card-header {
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  background: #fff;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.card-header-main {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.card-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: #f1f5f9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  flex-shrink: 0;
+  color: var(--primary);
+}
+
+.card-title-group h3 {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--primary);
+  margin-bottom: 2px;
+}
+
+.card-tag {
+  font-size: 11px;
+  color: var(--text-secondary);
+  background: #f8fafc;
+  padding: 1px 8px;
+  border-radius: 10px;
+  display: inline-block;
+  border: 1px solid var(--border);
+}
+
+.toggle-icon {
+  font-size: 18px;
+  color: var(--text-secondary);
+  transition: transform 0.2s;
+}
+
+.calc-card.open .toggle-icon {
+  transform: rotate(180deg);
+}
+
+.card-body {
+  padding: 16px;
+  display: none;
+  background: #fafbfc;
+  border-top: 1px solid var(--border);
+}
+
+.calc-card.open .card-body {
+  display: block;
+}
+
+/* Input Fields */
+.inputs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.input-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.input-field label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-wrapper input, .input-wrapper select {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  font-size: 14px;
+  outline: none;
+  background: #fff;
+  transition: border-color 0.2s;
+}
+
+.input-wrapper input:focus, .input-wrapper select:focus {
+  border-color: var(--primary);
+}
+
+.input-unit {
+  position: absolute;
+  left: 10px;
+  font-size: 12px;
+  color: var(--text-secondary);
+  pointer-events: none;
+}
+
+/* Action Buttons in Card */
+.card-actions {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+}
+
+.btn {
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: all 0.2s;
+}
+
+.btn-primary {
+  background: var(--primary);
+  color: #fff;
+}
+.btn-primary:hover { background: var(--primary-light); }
+
+.btn-orange {
+  background: var(--orange);
+  color: #fff;
+}
+.btn-orange:hover { opacity: 0.9; }
+
+.btn-outline {
+  background: #fff;
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+}
+.btn-outline:hover { background: #f8fafc; }
+
+/* Result Box */
+.result-box {
+  background: #fff;
+  border-radius: 10px;
+  padding: 14px;
+  border: 1px solid #cbd5e1;
+  border-right: 4px solid var(--gold);
+}
+
+.result-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.result-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--primary);
+}
+
+.result-items {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.result-item {
+  background: #f8fafc;
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: 1px solid #f1f5f9;
+}
+
+.result-item-label {
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+
+.result-item-val {
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--orange);
+}
+
+.formula-exp {
+  font-size: 12px;
+  color: #475569;
+  background: var(--gold-light);
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid #fef3c7;
+  margin-top: 8px;
+  line-height: 1.5;
+}
+
+/* --- BOTTOM NAV BAR --- */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #fff;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-around;
+  padding: 6px 0;
+  z-index: 1000;
+  box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+}
+
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  color: var(--text-secondary);
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 4px 12px;
+  border-radius: 8px;
+  border: none;
+  background: transparent;
+  transition: color 0.2s;
+}
+
+.nav-item.active {
+  color: var(--primary);
+}
+
+.nav-item-icon {
+  font-size: 18px;
+}
+
+/* --- MODAL (About & History) --- */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 39, 68, 0.6);
+  z-index: 20000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+}
+
+.modal-overlay.open {
+  opacity: 1;
+  visibility: visible;
+}
+
+.modal-content {
+  background: #fff;
+  border-radius: var(--radius);
+  max-width: 520px;
+  width: 100%;
+  max-height: 85vh;
+  overflow-y: auto;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+}
+
+.modal-header {
+  padding: 16px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--primary);
+  color: #fff;
+  position: sticky;
+  top: 0;
+}
+
+.modal-body {
+  padding: 20px 16px;
+}
+
+.toast {
+  position: fixed;
+  bottom: 85px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #1e293b;
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 25px;
+  font-size: 13px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  z-index: 30000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+.toast.show {
+  opacity: 1;
+}
+
+@media print {
+  body { padding-bottom: 0; background: #fff; }
+  header, .search-container, .categories-bar, .bottom-nav, .card-actions, .splash { display: none !important; }
+  .calc-card { break-inside: avoid; border: 1px solid #ccc; box-shadow: none; margin-bottom: 15px; }
+  .card-body { display: block !important; }
+}
+</style>
+</head>
+<body>
+
+<!-- SPLASH SCREEN -->
+<div id="splash">
+  <svg class="crane-icon" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect x="25" y="85" width="50" height="6" rx="3" fill="#d4af37"/>
+    <path d="M47 85V25H53V85H47Z" fill="#ffffff"/>
+    <path d="M47 75L53 65M47 65L53 55M47 55L53 45M47 45L53 35M47 35L53 25" stroke="#d4af37" stroke-width="2"/>
+    <path d="M50 12L45 25H55L50 12Z" fill="#f59e0b"/>
+    <path d="M15 25H85" stroke="#ffffff" stroke-width="3" stroke-linecap="round"/>
+    <path d="M50 12L20 25M50 12L80 25" stroke="#d4af37" stroke-width="1.5"/>
+    <rect x="18" y="23" width="10" height="10" fill="#ea580c" rx="2"/>
+    <rect x="70" y="24" width="6" height="5" fill="#ea580c" rx="1"/>
+    <path d="M73 29V50" stroke="#d4af37" stroke-width="1.5"/>
+    <rect x="65" y="50" width="16" height="6" fill="#d4af37" rx="2"/>
+  </svg>
+  <div class="splash-title">متره و برآورد عمران</div>
+  <div class="splash-badge">نسخه ۱.۰ | استاندارد مقررات ملی</div>
+  <div class="splash-author">طراحی و توسعه توسط مهندس نیما صیدی قمشه</div>
+</div>
+
+<!-- HEADER -->
+<header>
+  <div class="brand">
+    <div style="background: var(--gold); color: #0f2744; width:34px; height:34px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-weight:900;">🏗️</div>
+    <div>
+      <div class="brand-title">متره و برآورد عمران</div>
+      <div class="brand-sub">محاسبات تخصصی مهندسی</div>
+    </div>
+  </div>
+  <div class="header-actions">
+    <button class="btn-icon" onclick="openAboutModal()" title="درباره ما">ℹ️</button>
+    <button class="btn-icon" onclick="openHistoryModal()" title="تاریخچه">📜</button>
+    <button class="btn-icon" onclick="window.print()" title="چاپ / خروجی PDF">🖨️</button>
+  </div>
+</header>
+
+<!-- SEARCH BAR -->
+<div class="search-container">
+  <div class="search-box">
+    <span class="search-icon">🔍</span>
+    <input type="text" id="searchInput" class="search-input" placeholder="جستجوی سریع ماشین‌حساب (بتن، میلگرد، سقف، آسفالت، استخر...)">
+  </div>
+</div>
+
+<!-- CATEGORIES HORIZONTAL BAR -->
+<div class="categories-bar" id="catBar">
+  <button class="cat-chip active" data-cat="all">همه ماشین‌حساب‌ها</button>
+  <button class="cat-chip" data-cat="profile">پروفایل پروژه</button>
+  <button class="cat-chip" data-cat="building">ساختمان</button>
+  <button class="cat-chip" data-cat="villa">ویلا و دوبلکس</button>
+  <button class="cat-chip" data-cat="pool">استخر</button>
+  <button class="cat-chip" data-cat="mep">تأسیسات</button>
+  <button class="cat-chip" data-cat="road">راه</button>
+  <button class="cat-chip" data-cat="bridge">پل</button>
+  <button class="cat-chip" data-cat="tunnel">تونل</button>
+  <button class="cat-chip" data-cat="dam">سد</button>
+  <button class="cat-chip" data-cat="shed">سوله</button>
+  <button class="cat-chip" data-cat="tools">ابزارها</button>
+</div>
+
+<!-- MAIN CONTAINER -->
+<div class="container">
+
+  <!-- PROJECT PROFILE SECTION -->
+  <div id="projectProfileCard" class="profile-card">
+    <div class="profile-card-header" onclick="toggleProfileDetails()">
+      <div style="display:flex; align-items:center; gap:8px;">
+        <span style="font-size:18px;">📊</span>
+        <strong style="font-size:15px;">پروفایل و مشخصات کلی پروژه</strong>
+      </div>
+      <span class="profile-badge" id="profileBadge">مشخصات پایه</span>
+    </div>
+    <div id="profileBody">
+      <div class="profile-grid">
+        <div class="profile-field">
+          <label>نوع پروژه</label>
+          <select id="projType">
+            <option value="residential">ساختمان مسکونی معمولی</option>
+            <option value="villa">ویلا</option>
+            <option value="duplex">دوبلکس</option>
+            <option value="tower">برج</option>
+            <option value="shed">سوله صنعتی</option>
+            <option value="pool_in">استخر سرپوشیده</option>
+            <option value="pool_out">استخر روباز</option>
+          </select>
+        </div>
+        <div class="profile-field">
+          <label>زیربنای کل (مترمربع)</label>
+          <input type="number" id="projArea" value="500" min="10" step="10">
+        </div>
+        <div class="profile-field">
+          <label>تعداد طبقات</label>
+          <input type="number" id="projFloors" value="4" min="1" step="1">
+        </div>
+        <div class="profile-field">
+          <label>ارتفاع هر طبقه (متر)</label>
+          <input type="number" id="projHeight" value="3.2" min="2" max="10" step="0.1">
+        </div>
+        <div class="profile-field">
+          <label>موقعیت اقلیمی</label>
+          <select id="projRegion">
+            <option value="tehran">تهران (معتدل / زلزله زیاد)</option>
+            <option value="north">شمال کشور (بارندگی و رطوبت بالا)</option>
+            <option value="desert">کویر (گرم و خشک)</option>
+            <option value="mountain">کوهستان (برف‌گیر و سردسیر)</option>
+          </select>
+        </div>
+        <div class="profile-field">
+          <label>نوع اسکلت سازه</label>
+          <select id="projStructure">
+            <option value="concrete">بتن مسلح</option>
+            <option value="steel">اسکلت فلزی</option>
+            <option value="composite">مختلط</option>
+          </select>
+        </div>
+      </div>
+      <button class="profile-apply-btn" onclick="applyProjectProfile()">
+        <span>🔄</span> اعمال مشخصات پروژه بر ماشین‌حساب‌های ساختمان و تأسیسات
+      </button>
+    </div>
+  </div>
+
+  <!-- CALCULATORS LIST -->
+  <div class="section-header">
+    <div class="section-title">
+      <span>🧮</span>
+      <span id="sectionTitleText">همه ماشین‌حساب‌های متره و برآورد</span>
+    </div>
+    <span style="font-size:12px; color:var(--text-secondary);" id="calcCountText"></span>
+  </div>
+
+  <div class="cards-grid" id="cardsGrid">
+    <!-- Rendered dynamically by JavaScript -->
+  </div>
+
+</div>
+
+<!-- BOTTOM NAVIGATION -->
+<div class="bottom-nav">
+  <button class="nav-item active" onclick="switchNav('all')">
+    <span class="nav-item-icon">🏠</span>
+    <span>ماشین‌حساب‌ها</span>
+  </button>
+  <button class="nav-item" onclick="switchNav('profile')">
+    <span class="nav-item-icon">📊</span>
+    <span>پروژه</span>
+  </button>
+  <button class="nav-item" onclick="openHistoryModal()">
+    <span class="nav-item-icon">📜</span>
+    <span>تاریخچه</span>
+  </button>
+  <button class="nav-item" onclick="openAboutModal()">
+    <span class="nav-item-icon">👤</span>
+    <span>درباره ما</span>
+  </button>
+</div>
+
+<!-- ABOUT MODAL -->
+<div class="modal-overlay" id="aboutModal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <div style="display:flex; align-items:center; gap:8px;">
+        <span>👤</span>
+        <strong>درباره سازنده و نرم‌افزار</strong>
+      </div>
+      <button class="btn-icon" onclick="closeAboutModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div style="text-align:center; margin-bottom:18px;">
+        <div style="width:70px; height:70px; border-radius:50%; background:var(--gold-light); border:3px solid var(--gold); display:flex; align-items:center; justify-content:center; font-size:32px; margin:0 auto 10px;">👷‍♂️</div>
+        <h3 style="color:var(--primary); font-size:18px; margin-bottom:4px;">مهندس نیما صیدی قمشه</h3>
+        <p style="color:var(--orange); font-weight:700; font-size:13px;">مهندسی عمران | طراح و توسعه‌دهنده</p>
+        <div style="margin-top:6px; display:inline-block; background:#e2e8f0; padding:2px 10px; border-radius:12px; font-size:11px; color:#475569;">نسخه ۱.۰ (ویرایش استاندارد)</div>
+      </div>
+      <div style="background:#f8fafc; padding:14px; border-radius:10px; border:1px solid #e2e8f0; margin-bottom:16px; line-height:1.8; font-size:13.5px; text-align:justify;">
+        «این اپلیکیشن با هدف ساده‌سازی و تسریع محاسبات متره و برآورد در پروژه‌های عمرانی طراحی شده است. از دانشجویان و مهندسان تازه‌کار تا پیمانکاران حرفه‌ای، همه می‌توانند از ابزارهای دقیق و کاربردی این اپ در حوزه‌های ساختمان، راه، پل، تونل، سد و سوله استفاده کنند.»
+      </div>
+      <div style="font-size:12px; color:var(--text-secondary); line-height:1.7;">
+        <strong>ویژگی‌های کلیدی:</strong>
+        <ul style="padding-right:20px; margin-top:6px;">
+          <li>پوشش کامل کلیه فصول فهارس‌بهای ابنیه، تأسیسات و راه</li>
+          <li>لحاظ کردن دقیق ضرایب پرت، اضافه متراژ و همپوشانی‌ها</li>
+          <li>اتصال هوشمند به پروفایل ابعاد و اقلیم پروژه</li>
+          <li>امکان ذخیره‌سازی، اشتراک‌گذاری و چاپ مستقیم PDF</li>
+        </ul>
+      </div>
+      <button class="btn btn-primary" style="width:100%; margin-top:18px;" onclick="closeAboutModal()">متوجه شدم</button>
+    </div>
+  </div>
+</div>
+
+<!-- HISTORY MODAL -->
+<div class="modal-overlay" id="historyModal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <div style="display:flex; align-items:center; gap:8px;">
+        <span>📜</span>
+        <strong>تاریخچه محاسبات ذخیره شده</strong>
+      </div>
+      <button class="btn-icon" onclick="closeHistoryModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div id="historyList">
+        <!-- populated dynamically -->
+      </div>
+      <div style="display:flex; gap:10px; margin-top:16px;">
+        <button class="btn btn-outline" style="flex:1;" onclick="clearHistory()">پاک کردن تاریخچه</button>
+        <button class="btn btn-primary" style="flex:1;" onclick="closeHistoryModal()">بستن</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST MESSAGE -->
+<div id="toast" class="toast">پیام سیستم</div>
+
+<script>
+// --- SPLASH SCREEN LOGIC ---
+function hideSplash() {
+  const splash = document.getElementById('splash');
+  if (splash && !splash.classList.contains('hidden')) {
+    splash.classList.add('hidden');
+  }
+}
+window.addEventListener('load', () => {
+  setTimeout(hideSplash, 2000);
+});
+setTimeout(hideSplash, 2800); // Safety fallback
+
+// --- TOAST HELPER ---
+function showToast(msg) {
+  const toast = document.getElementById('toast');
+  if (!toast) return;
+  toast.innerText = msg;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 2500);
+}
+
+// --- PROJECT PROFILE STATE ---
+const projectProfile = {
+  type: 'residential',
+  area: 500,
+  floors: 4,
+  height: 3.2,
+  region: 'tehran',
+  structure: 'concrete'
+};
+
+function toggleProfileDetails() {
+  const body = document.getElementById('profileBody');
+  if (body.style.display === 'none') {
+    body.style.display = 'block';
+  } else {
+    body.style.display = 'none';
+  }
+}
+
+function applyProjectProfile() {
+  try {
+    projectProfile.type = document.getElementById('projType').value;
+    projectProfile.area = parseFloat(document.getElementById('projArea').value) || 500;
+    projectProfile.floors = parseInt(document.getElementById('projFloors').value) || 4;
+    projectProfile.height = parseFloat(document.getElementById('projHeight').value) || 3.2;
+    projectProfile.region = document.getElementById('projRegion').value;
+    projectProfile.structure = document.getElementById('projStructure').value;
+
+    document.getElementById('profileBadge').innerText = `${projectProfile.area} م² | ${projectProfile.floors} ط | ${projectProfile.structure === 'concrete' ? 'بتنی' : 'فلزی'}`;
+    showToast('مشخصات پروژه بر تمام ماشین‌حساب‌های هوشمند اعمال شد.');
+    
+    document.querySelectorAll('.calc-card.open').forEach(card => {
+      const calcId = card.getAttribute('data-id');
+      if (calcId) calculate(calcId);
+    });
+  } catch (err) {
+    console.error('Error applying profile', err);
+  }
+}
+
+// --- COMPREHENSIVE REGISTRY OF ALL CALCULATORS ---
+const CALCULATORS = [
+  // === 1. بخش ساختمان ===
+  {
+    id: 'bldg_concrete',
+    cat: 'building',
+    title: 'متره بتن ساختمان (سیمان، ماسه، شن، آب)',
+    icon: '🏢',
+    inputs: [
+      { id: 'vol', label: 'حجم کل بتن', def: 100, unit: 'مترمکعب', step: 1 },
+      { id: 'grade', label: 'عیار سیمان', def: 350, unit: 'kg/m³', step: 25 },
+      { id: 'waste', label: 'ضریب پرت بتن', def: 5, unit: 'درصد', step: 1 }
+    ],
+    calc: (v) => {
+      const totalVol = v.vol * (1 + v.waste / 100);
+      const cementKg = totalVol * v.grade;
+      const cementBags = Math.ceil(cementKg / 50);
+      const sandTon = (totalVol * 0.45 * 1.6).toFixed(1);
+      const gravelTon = (totalVol * 0.8 * 1.6).toFixed(1);
+      const waterLit = Math.round(cementKg * 0.45);
+      return {
+        items: [
+          { label: 'حجم بتن با پرت', val: `${totalVol.toFixed(1)} م³` },
+          { label: 'سیمان (پاکت ۵۰kg)', val: `${cementBags} پاکت` },
+          { label: 'ماسه دانه‌بندی', val: `${sandTon} تن` },
+          { label: 'شن نخودی/بادامی', val: `${gravelTon} تن` },
+          { label: 'آب مصرفی بتن', val: `${waterLit} لیتر` }
+        ],
+        formula: 'محاسبه بر مبنای عیار سیمان، نسبت آب به سیمان W/C=0.45 و وزن مخصوص مصالح سنگی.'
+      };
+    }
+  },
+  {
+    id: 'bldg_brick',
+    cat: 'building',
+    title: 'متره آجر و ملات ماسه سیمان',
+    icon: '🧱',
+    inputs: [
+      { id: 'area', label: 'مساحت دیوار', def: 100, unit: 'مترمربع', step: 5 },
+      { id: 'thick', label: 'ضخامت دیوار', def: 20, unit: 'سانتی‌متر', select: [{val:10, text:'۱۰ سانتی (تیغه‌ای)'}, {val:20, text:'۲۰ سانتی'}, {val:35, text:'۳۵ سانتی باربر'}] },
+      { id: 'type', label: 'نوع آجر / بلوک', def: 'feshari', select: [
+        {val:'feshari', text:'آجر فشاری (زبره)'},
+        {val:'sofal15', text:'سفال ۱۵ سانتی'},
+        {val:'sofal10', text:'سفال ۱۰ سانتی'},
+        {val:'cement_blk', text:'بلوک سیمانی ۲۰×۴۰'}
+      ]}
+    ],
+    calc: (v) => {
+      let brickCount = 0;
+      let mortarVol = 0;
+      if (v.type === 'feshari') {
+        brickCount = v.thick === 10 ? v.area * 70 : v.thick === 20 ? v.area * 140 : v.area * 240;
+        mortarVol = v.area * (v.thick / 100) * 0.28;
+      } else if (v.type === 'sofal15') {
+        brickCount = v.area * 27;
+        mortarVol = v.area * 0.025;
+      } else if (v.type === 'sofal10') {
+        brickCount = v.area * 27;
+        mortarVol = v.area * 0.018;
+      } else {
+        brickCount = v.area * 12.5;
+        mortarVol = v.area * 0.03;
+      }
+      const cementBags = Math.ceil(mortarVol * 300 / 50);
+      const sandTon = (mortarVol * 1.5).toFixed(1);
+      return {
+        items: [
+          { label: 'تعداد آجر/بلوک', val: `${Math.ceil(brickCount * 1.05)} عدد` },
+          { label: 'حجم ملات', val: `${mortarVol.toFixed(2)} م³` },
+          { label: 'سیمان ملات (۵۰kg)', val: `${cementBags} پاکت` },
+          { label: 'ماسه ملات', val: `${sandTon} تن` }
+        ],
+        formula: 'شامل ۵٪ ضریب پرت شکست و بندکشی ملات ۱۰ تا ۱۵ میلی‌متری.'
+      };
+    }
+  },
+  {
+    id: 'bldg_rebar',
+    cat: 'building',
+    title: 'متره میلگرد و فولاد سازه',
+    icon: '⚙️',
+    inputs: [
+      { id: 'area', label: 'زیربنای کل', def: 500, unit: 'مترمربع', step: 20 },
+      { id: 'rate', label: 'مصرف میلگرد در هر متر', def: 45, unit: 'کیلوگرم/م²', step: 5 },
+      { id: 'overlap', label: 'ضریب اورلب و پرت', def: 12, unit: 'درصد', step: 1 }
+    ],
+    calc: (v) => {
+      const netWeight = v.area * v.rate;
+      const totalWeightKg = netWeight * (1 + v.overlap / 100);
+      const totalTon = (totalWeightKg / 1000).toFixed(2);
+      const rebar12mCount = Math.ceil(totalWeightKg / (12 * 2.0));
+      return {
+        items: [
+          { label: 'وزن کل میلگرد', val: `${totalTon} تن` },
+          { label: 'وزن به کیلوگرم', val: `${Math.round(totalWeightKg).toLocaleString('fa-IR')} kg` },
+          { label: 'تخمین شاخه ۱۲ متری', val: `${rebar12mCount} شاخه` }
+        ],
+        formula: 'برآورد بر مبنای مبحث نهم مقررات ملی با اورلب استاندارد ۴۰ الی ۵۰ برابر قطر.'
+      };
+    }
+  },
+  {
+    id: 'bldg_foundation',
+    cat: 'building',
+    title: 'متره فونداسیون و پی (خاک، مگر، قالب، بتن، میلگرد)',
+    icon: '🏗️',
+    inputs: [
+      { id: 'footArea', label: 'مساحت پی', def: 180, unit: 'مترمربع', step: 10 },
+      { id: 'thick', label: 'ضخامت پی', def: 0.8, unit: 'متر', step: 0.1 },
+      { id: 'perim', label: 'محیط قالب‌بندی', def: 60, unit: 'متر', step: 2 },
+      { id: 'excavDepth', label: 'عمق خاکبرداری', def: 1.5, unit: 'متر', step: 0.2 }
+    ],
+    calc: (v) => {
+      const soilExcav = (v.footArea * 1.15 * v.excavDepth).toFixed(1);
+      const magerVol = (v.footArea * 0.1).toFixed(1);
+      const concreteVol = (v.footArea * v.thick).toFixed(1);
+      const formArea = (v.perim * v.thick).toFixed(1);
+      const rebarTon = (concreteVol * 65 / 1000).toFixed(2);
+      return {
+        items: [
+          { label: 'خاکبرداری با اضافه عرض', val: `${soilExcav} م³` },
+          { label: 'بتن مگر عیار ۱۵۰ (۱۰cm)', val: `${magerVol} م³` },
+          { label: 'بتن سازه‌ای پی', val: `${concreteVol} م³` },
+          { label: 'قالب‌بندی پیرامونی', val: `${formArea} م²` },
+          { label: 'میلگرد فونداسیون', val: `${rebarTon} تن` }
+        ],
+        formula: 'خاکبرداری با ضریب تورم ۱۵٪، مگر ۱۰cm و آرماتور متوسط ۶۰-۷۰ کیلو در مترمکعب.'
+      };
+    }
+  },
+  {
+    id: 'bldg_roof',
+    cat: 'building',
+    title: 'متره سقف (تیرچه بلوک، دال، عرشه فولادی)',
+    icon: '🏠',
+    inputs: [
+      { id: 'area', label: 'مساحت سقف', def: 150, unit: 'مترمربع', step: 10 },
+      { id: 'type', label: 'سیستم سقف', def: 'tirche', select: [
+        {val:'tirche', text:'تیرچه و یونولیت (بلوک)'},
+        {val:'dal', text:'دال بتنی مسلح'},
+        {val:'deck', text:'عرشه فولادی (Metal Deck)'},
+        {val:'composite', text:'کامپوزیت فلزی'}
+      ]}
+    ],
+    calc: (v) => {
+      if (v.type === 'tirche') {
+        const tircheM = (v.area * 1.5).toFixed(0);
+        const unoliteCount = Math.ceil(v.area * 0.68);
+        const concVol = (v.area * 0.18).toFixed(1);
+        const meshRebarKg = Math.round(v.area * 4.5);
+        return {
+          items: [
+            { label: 'طول کل تیرچه', val: `${tircheM} متر طول` },
+            { label: 'تعداد یونولیت سقفی', val: `${unoliteCount} عدد` },
+            { label: 'حجم بتن سقف', val: `${concVol} م³` },
+            { label: 'میلگرد افت و حرارت', val: `${meshRebarKg} kg` }
+          ],
+          formula: 'محاسبه تیرچه با فواصل ۵۰ سانتیمتر و دال بتنی بتن‌ریزی رویه ۵ سانتیمتر.'
+        };
+      } else if (v.type === 'deck') {
+        const sheetM2 = (v.area * 1.08).toFixed(1);
+        const studCount = Math.ceil(v.area * 2.8);
+        const concVol = (v.area * 0.12).toFixed(1);
+        return {
+          items: [
+            { label: 'ورق گالوانیزه فرم‌یافته', val: `${sheetM2} م²` },
+            { label: 'تعداد گل‌میخ (Stud)', val: `${studCount} عدد` },
+            { label: 'حجم بتن رویه', val: `${concVol} م³` },
+            { label: 'مش آرماتور حرارتی', val: `${Math.round(v.area * 3.5)} kg` }
+          ],
+          formula: 'ورق عرشه با همپوشانی ۸٪ و گل‌میخ گرید ۱۹×۱۱۵ استاندارد.'
+        };
+      } else {
+        const concVol = (v.area * 0.22).toFixed(1);
+        const rebarTon = (v.area * 22 / 1000).toFixed(2);
+        return {
+          items: [
+            { label: 'حجم بتن دال', val: `${concVol} م³` },
+            { label: 'میلگرد دال دوطرفه', val: `${rebarTon} تن` },
+            { label: 'قالب‌بندی زیرین', val: `${v.area} م²` }
+          ],
+          formula: 'دال بتنی مسلح با ضخامت میانگین ۱۵ الی ۲۰ سانتی‌متر و میلگرد دو سفره.'
+        };
+      }
+    }
+  },
+  {
+    id: 'bldg_knauf',
+    cat: 'building',
+    title: 'متره کناف و درای‌وال (سقف کاذب و دیوار)',
+    icon: '📐',
+    inputs: [
+      { id: 'area', label: 'مساحت کناف', def: 100, unit: 'مترمربع', step: 10 },
+      { id: 'type', label: 'نوع کاربرد', def: 'ceiling', select: [
+        {val:'ceiling', text:'سقف کاذب یکپارچه D112'},
+        {val:'wall', text:'دیوار جداکننده درای‌وال W111'}
+      ]}
+    ],
+    calc: (v) => {
+      const boardCount = Math.ceil(v.area / 2.88 * 1.08);
+      const f47Profile = (v.area * 3.2).toFixed(0);
+      const u36Profile = (v.area * 0.9).toFixed(0);
+      const l25Profile = (Math.sqrt(v.area) * 4 * 1.1).toFixed(0);
+      const screws = Math.ceil(v.area * 24);
+      const puttyKg = Math.round(v.area * 0.9);
+      const tapeM = Math.round(v.area * 1.5);
+      return {
+        items: [
+          { label: 'پانل گچی کناف (RG/MR)', val: `${boardCount} برگ` },
+          { label: 'پروفیل سازه اصلی (F47/CW)', val: `${f47Profile} متر` },
+          { label: 'پروفیل تراز (L25/UW)', val: `${l25Profile} متر` },
+          { label: 'پیچ پانل TN25', val: `${screws} عدد` },
+          { label: 'بتونه درزگیر کناف', val: `${puttyKg} kg` },
+          { label: 'نوار درزگیر کاغذی/فایبر', val: `${tapeM} متر` }
+        ],
+        formula: 'بر اساس دیتایل فنی کناف استاندارد با احتساب ۸٪ همپوشانی و پرتی پانل‌ها.'
+      };
+    }
+  },
+  {
+    id: 'bldg_finishing',
+    cat: 'building',
+    title: 'متره نازک‌کاری (گچ، کاشی، سرامیک، نقاشی)',
+    icon: '🎨',
+    inputs: [
+      { id: 'plasterArea', label: 'مساحت گچ‌کاری دیوارها', def: 250, unit: 'مترمربع', step: 10 },
+      { id: 'tileArea', label: 'مساحت کاشی و سرامیک', def: 80, unit: 'مترمربع', step: 5 },
+      { id: 'paintArea', label: 'مساحت نقاشی ساختمان', def: 300, unit: 'مترمربع', step: 10 }
+    ],
+    calc: (v) => {
+      const gachKhakBags = Math.ceil(v.plasterArea * 28 / 40);
+      const sefidGachBags = Math.ceil(v.plasterArea * 5 / 30);
+      const tilePacks = Math.ceil(v.tileArea * 1.08 / 1.44);
+      const tileGlueKg = Math.round(v.tileArea * 4.5);
+      const paintKg = Math.round(v.paintArea * 0.35);
+      return {
+        items: [
+          { label: 'گچ و خاک (کیسه ۴۰kg)', val: `${gachKhakBags} کیسه` },
+          { label: 'گچ سفیدکاری (کیسه ۳۰kg)', val: `${sefidGachBags} کیسه` },
+          { label: 'کارتن کاشی/سرامیک', val: `${tilePacks} کارتن` },
+          { label: 'چسب پودری کاشی', val: `${tileGlueKg} kg` },
+          { label: 'رنگ ساختمانی (۳ دست)', val: `${paintKg} کیلوگرم` }
+        ],
+        formula: 'ضخامت گچ و خاک ۲.۵cm، سفیدکاری ۲mm، و ضریب پرت کاشی ۸٪.'
+      };
+    }
+  },
+  {
+    id: 'bldg_stone_facade',
+    cat: 'building',
+    title: 'متره سنگ نما و اسکوپ (تراورتن، گرانیت)',
+    icon: '🏛️',
+    inputs: [
+      { id: 'facadeArea', label: 'مساحت کل نما', def: 120, unit: 'مترمربع', step: 10 },
+      { id: 'system', label: 'سیستم اجرا', def: 'wet', select: [
+        {val:'wet', text:'نمای تر (دوغابی با اسکوپ)'},
+        {val:'dry', text:'نمای خشک مهندسی (پروفیل و شاسی)'}
+      ]}
+    ],
+    calc: (v) => {
+      const stoneM2 = (v.facadeArea * 1.10).toFixed(1);
+      if (v.system === 'wet') {
+        const scoops = Math.ceil(v.facadeArea * 6);
+        const cementBags = Math.ceil(v.facadeArea * 14 / 50);
+        const sandTon = (v.facadeArea * 0.05 * 1.5).toFixed(1);
+        return {
+          items: [
+            { label: 'متراژ سنگ با پرت', val: `${stoneM2} م²` },
+            { label: 'تعداد بست اسکوپ گالوانیزه', val: `${scoops} عدد` },
+            { label: 'سیمان دوغاب پشت سنگ', val: `${cementBags} پاکت` },
+            { label: 'ماسه شسته پشت نما', val: `${sandTon} تن` }
+          ],
+          formula: 'اسکوپ مکانیکی به منظور عدم سقوط سنگ طبق مبحث چهارم با ضخامت دوغاب ۳ تا ۵ سانتی‌متر.'
+        };
+      } else {
+        const steelIronKg = Math.round(v.facadeArea * 11);
+        const alumBrackets = Math.ceil(v.facadeArea * 8);
+        return {
+          items: [
+            { label: 'سنگ پلاک کالیبره', val: `${stoneM2} م²` },
+            { label: 'پروفیل زیرسازی آهن', val: `${steelIronKg} kg` },
+            { label: 'اتصالات و انکربولت', val: `${alumBrackets} عدد` }
+          ],
+          formula: 'نمای خشک با قوطی ۴۰×۴۰ زیرسازی و کلمپ‌های استیل یا آلومینیومی مقاوم به باد.'
+        };
+      }
+    }
+  },
+  {
+    id: 'bldg_steel_structure',
+    cat: 'building',
+    title: 'متره اسکلت فلزی جامع (تیر، ستون، بادبند، پیچ)',
+    icon: '🔩',
+    inputs: [
+      { id: 'area', label: 'زیربنای کل ساختمان', def: 400, unit: 'مترمربع', step: 20 },
+      { id: 'kgRate', label: 'نرخ آهن مصرفی در مترمربع', def: 65, unit: 'kg/m²', step: 5 },
+      { id: 'connType', label: 'نوع اتصالات سازه', def: 'weld', select: [
+        {val:'weld', text:'جوشی (میدانی یا کارخانه‌ای)'},
+        {val:'bolt', text:'پیچ و مهره اصطکاکی گرید ۱۰.۹'}
+      ]}
+    ],
+    calc: (v) => {
+      const totalSteelKg = v.area * v.kgRate;
+      const totalTon = (totalSteelKg / 1000).toFixed(2);
+      const platesKg = Math.round(totalSteelKg * 0.18);
+      const antiRustKg = Math.round(totalSteelKg / 1000 * 2.8);
+      const electrodeKg = Math.round(totalSteelKg * 0.015);
+      const boltsCount = Math.ceil(v.area * 7.5);
+      return {
+        items: [
+          { label: 'وزن کل اسکلت فلزی', val: `${totalTon} تن` },
+          { label: 'ورق‌های اتصال و گاست', val: `${platesKg} kg` },
+          { label: 'رنگ ضدزنگ آلکیدی', val: `${antiRustKg} کیلوگرم` },
+          { label: v.connType === 'weld' ? 'الکترود جوشکاری E7018' : 'پیچ و مهره A490/10.9', val: v.connType === 'weld' ? `${electrodeKg} kg` : `${boltsCount} دست` }
+        ],
+        formula: 'بر اساس مبحث دهم مقررات ملی، لحاظ کردن ۱۰-۱۵٪ وزن ورق‌های تقویتی و رنگ‌آمیزی دوسطحه.'
+      };
+    }
+  },
+  {
+    id: 'bldg_waterproofing',
+    cat: 'building',
+    title: 'متره ایزوبام و عایق‌کاری رطوبتی بام و سرویس',
+    icon: '🌧️',
+    inputs: [
+      { id: 'roofArea', label: 'مساحت پشت‌بام و سرویس‌ها', def: 180, unit: 'مترمربع', step: 10 },
+      { id: 'layers', label: 'تعداد لایه عایق', def: 2, select: [{val:1, text:'تک لایه فویل‌دار'}, {val:2, text:'دولایه استاندارد'}] }
+    ],
+    calc: (v) => {
+      const netM2 = v.roofArea * (v.layers === 2 ? 2.15 : 1.12);
+      const rollsCount = Math.ceil(netM2 / 10);
+      const primerKg = Math.round(v.roofArea * 0.8);
+      const gasCylinders = Math.ceil(rollsCount / 12);
+      return {
+        items: [
+          { label: 'متراژ رول ایزوگام', val: `${netM2.toFixed(1)} م²` },
+          { label: 'تعداد رول (۱۰ متری)', val: `${rollsCount} رول` },
+          { label: 'قیر پرایمر زیرسازی', val: `${primerKg} kg` },
+          { label: 'تخمین گاز مایع کپسول', val: `${gasCylinders} کپسول` }
+        ],
+        formula: 'محاسبه ۱۰ سانتی‌متر همپوشانی طولی و عرضی به همراه ماهیچه‌کشی دور لوله‌ها و جان‌پناه.'
+      };
+    }
+  },
+  {
+    id: 'bldg_formwork',
+    cat: 'building',
+    title: 'متره قالب‌بندی (فلزی، چوبی، تعداد دفعات کاربرد)',
+    icon: '📐',
+    inputs: [
+      { id: 'contactArea', label: 'مساحت تماس بتن و قالب', def: 220, unit: 'مترمربع', step: 10 },
+      { id: 'reuses', label: 'تعداد دفعات پیش‌بینی استفاده مجدد', def: 4, unit: 'بار', step: 1 },
+      { id: 'type', label: 'نوع قالب', def: 'metal', select: [{val:'metal', text:'قالب فلزی مدولار پین‌گوه‌ای'}, {val:'plywood', text:'پلای‌وود چوبی (پلی‌وود)'}] }
+    ],
+    calc: (v) => {
+      const purchaseArea = (v.contactArea / v.reuses * 1.08).toFixed(1);
+      const pinWedgePairs = Math.ceil(v.contactArea * 4.5);
+      const propsCount = Math.ceil(v.contactArea * 1.1);
+      const moldOilLit = Math.round(v.contactArea * 0.12);
+      return {
+        items: [
+          { label: 'متراژ قالب مورد نیاز تجهیز', val: `${purchaseArea} م²` },
+          { label: 'تعداد جک سقفی و ساپورت', val: `${propsCount} عدد` },
+          { label: 'پین و گوه یا گیره قالب', val: `${pinWedgePairs} جفت` },
+          { label: 'روغن قالب پایه گیاهی', val: `${moldOilLit} لیتر` }
+        ],
+        formula: 'برآورد سهم استهلاک قالب بر اساس تعداد دفعات استفاده و ضرایب پرت جک‌گذاری.'
+      };
+    }
+  },
+  {
+    id: 'bldg_demolition',
+    cat: 'building',
+    title: 'متره تخریب و بارگیری نخاله‌های ساختمانی',
+    icon: '🚜',
+    inputs: [
+      { id: 'area', label: 'زیربنای تخریب ساختمان', def: 300, unit: 'مترمربع', step: 20 },
+      { id: 'floors', label: 'تعداد طبقات بنای قدیمی', def: 2, unit: 'طبقه', step: 1 },
+      { id: 'struct', label: 'نوع سازه قدیمی', def: 'masonry', select: [
+        {val:'masonry', text:'بنایی سنتی (دیوار باربر طاق ضربی)'},
+        {val:'concrete', text:'بتن مسلح'},
+        {val:'steel', text:'اسکلت فلزی'}
+      ]}
+    ],
+    calc: (v) => {
+      const factor = v.struct === 'masonry' ? 0.75 : v.struct === 'concrete' ? 0.9 : 0.55;
+      const totalDebrisM3 = (v.area * v.floors * factor).toFixed(0);
+      const dumpTrucks = Math.ceil(totalDebrisM3 / 10);
+      const steelScrapTon = (v.area * v.floors * (v.struct === 'steel' ? 0.06 : 0.015)).toFixed(1);
+      return {
+        items: [
+          { label: 'حجم نخاله انباشته با پف', val: `${totalDebrisM3} م³` },
+          { label: 'تعداد سرویس کامیون ۱۰ چرخ', val: `${dumpTrucks} سرویس` },
+          { label: 'آهن‌آلات ضایعاتی بازیافتی', val: `${steelScrapTon} تن` }
+        ],
+        formula: 'محاسبه ضریب تخلخل و انبساط حجمی آوار (Swell Factor = 1.35) و حمل به گود تخلیه.'
+      };
+    }
+  },
+
+  // === 2. بخش ویلا و دوبلکس ===
+  {
+    id: 'villa_north',
+    cat: 'villa',
+    title: 'متره ویژه ویلاهای شمال (بارندگی، رطوبت، شیروانی)',
+    icon: '🏡',
+    inputs: [
+      { id: 'landArea', label: 'زیربنای طبقه همکف', def: 120, unit: 'مترمربع', step: 10 },
+      { id: 'roofSlope', label: 'زاویه شیب سقف شیروانی', def: 35, unit: 'درجه', step: 5 },
+      { id: 'roofType', label: 'پوشش سقف شیروانی', def: 'shingle', select: [
+        {val:'shingle', text:'شینگل / آندولین دکوراتیو'},
+        {val:'galvanized', text:'ورق رنگی گالوانیزه طرح سفال'},
+        {val:'pottery', text:'سفال سنتی طبرستان'}
+      ]}
+    ],
+    calc: (v) => {
+      const rad = (v.roofSlope * Math.PI) / 180;
+      const slopeFactor = 1 / Math.cos(rad);
+      const slopedArea = (v.landArea * 1.25 * slopeFactor).toFixed(1);
+      const gutterM = (Math.sqrt(v.landArea) * 4 * 1.1).toFixed(0);
+      const drainSoilM3 = (v.landArea * 0.4).toFixed(1);
+      return {
+        items: [
+          { label: 'مساحت سقف شیبدار واقعی', val: `${slopedArea} م²` },
+          { label: 'طول آبرو و ناودان لندنی', val: `${gutterM} متر` },
+          { label: 'زهکشی قلوه‌سنگ پیرامونی', val: `${drainSoilM3} م³` },
+          { label: 'عایق پشم سنگ دانسیته ۸۰', val: `${slopedArea} م²` }
+        ],
+        formula: 'محاسبه پیش‌آمدگی کنسول شیروانی (اورویس) با در نظر گرفتن بار باد و رطوبت ۹۰٪ شمال.'
+      };
+    }
+  },
+  {
+    id: 'villa_duplex',
+    cat: 'villa',
+    title: 'متره دوبلکس (پله پیچ گرد، نرده، وید)',
+    icon: '🪜',
+    inputs: [
+      { id: 'stepCount', label: 'تعداد پله‌های رابط دوبلکس', def: 18, unit: 'عدد', step: 1 },
+      { id: 'voidPerim', label: 'محیط فضای باز وید (Void)', def: 14, unit: 'متر', step: 1 },
+      { id: 'railingType', label: 'جنس نرده و حفاظ پله', def: 'glass', select: [
+        {val:'glass', text:'شیشه لمینت سکوریت و فیکس‌پوینت'},
+        {val:'steel', text:'استیل استنلس ۳۰۴'},
+        {val:'wood', text:'چوب طبیعی راش'}
+      ]}
+    ],
+    calc: (v) => {
+      const stepTreadM2 = (v.stepCount * 0.30 * 1.1).toFixed(1);
+      const spineSteelKg = Math.round(v.stepCount * 22);
+      const railingLength = (v.voidPerim + (v.stepCount * 0.35)).toFixed(1);
+      return {
+        items: [
+          { label: 'سنگ/چوب کف پله و زیرپله', val: `${stepTreadM2} م²` },
+          { label: 'شاسی فلزی پله پیچ (IPE/باکس)', val: `${spineSteelKg} kg` },
+          { label: 'طول کل نرده پله و وید', val: `${railingLength} متر طول` }
+        ],
+        formula: 'فرمول استاندارد بلوندل: 2R + T = 63cm، عرض مفید پله ۱۱۰ سانتی‌متر.'
+      };
+    }
+  },
+
+  // === 3. بخش استخر ===
+  {
+    id: 'pool_concrete',
+    cat: 'pool',
+    title: 'متره استخر بتنی (خاک، بتن آب‌بند، کاشی، لوله)',
+    icon: '🏊',
+    inputs: [
+      { id: 'length', label: 'طول استخر', def: 8, unit: 'متر', step: 0.5 },
+      { id: 'width', label: 'عرض استخر', def: 4, unit: 'متر', step: 0.5 },
+      { id: 'avgDepth', label: 'عمق میانگین', def: 1.6, unit: 'متر', step: 0.1 },
+      { id: 'wallThick', label: 'ضخامت دیواره و کف بتنی', def: 0.25, unit: 'متر', step: 0.05 }
+    ],
+    calc: (v) => {
+      const waterVol = (v.length * v.width * v.avgDepth).toFixed(1);
+      const innerArea = (v.length * v.width + 2 * (v.length + v.width) * v.avgDepth).toFixed(1);
+      const excavVol = ((v.length + 1.2) * (v.width + 1.2) * (v.avgDepth + 0.4)).toFixed(1);
+      const concreteVol = (innerArea * v.wallThick * 1.05).toFixed(1);
+      const rebarTon = (concreteVol * 80 / 1000).toFixed(2);
+      const waterstopM = (2 * (v.length + v.width)).toFixed(0);
+      return {
+        items: [
+          { label: 'حجم آبگیری استخر', val: `${waterVol} م³` },
+          { label: 'خاکبرداری کاسه استخر', val: `${excavVol} م³` },
+          { label: 'بتن عیار ۴۰۰ واترپروف', val: `${concreteVol} م³` },
+          { label: 'آرماتوربندی دو شبکه فی ۱۲', val: `${rebarTon} تن` },
+          { label: 'واتراستاپ پی‌وی‌سی درز سرد', val: `${waterstopM} متر` },
+          { label: 'مساحت کاشی‌کاری استخری', val: `${innerArea} م²` }
+        ],
+        formula: 'طراحی سازه هیدرولیکی مخازن بر اساس استاندارد ACI 350 و استفاده از ژل میکروسیلیس.'
+      };
+    }
+  },
+  {
+    id: 'pool_equip',
+    cat: 'pool',
+    title: 'تجهیزات و تأسیسات استخر، تصفیه و جکوزی',
+    icon: '⚙️',
+    inputs: [
+      { id: 'waterVol', label: 'حجم آب استخر', def: 50, unit: 'مترمکعب', step: 5 },
+      { id: 'turnover', label: 'نرخ گردش آب (ساعت)', def: 6, unit: 'ساعت', select: [{val:4, text:'۴ ساعته (جکوزی و عمومی)'}, {val:6, text:'۶ ساعته (خانگی)'}, {val:8, text:'۸ ساعته'}] },
+      { id: 'hasJacuzzi', label: 'دارای جکوزی ۶ نفره', def: 'yes', select: [{val:'yes', text:'بله'}, {val:'no', text:'خیر'}] }
+    ],
+    calc: (v) => {
+      const flowRateGpm = Math.round((v.waterVol * 1000 / (v.turnover * 60)) * 4.403);
+      const pumpHp = (flowRateGpm / 40).toFixed(1);
+      const sandFilterDia = Math.round(Math.sqrt(flowRateGpm / 15) * 12);
+      const boilerKcal = Math.round(v.waterVol * 1000 * 1.3);
+      return {
+        items: [
+          { label: 'دبی پمپ تصفیه', val: `${flowRateGpm} GPM` },
+          { label: 'قدرت تخمینی پمپ', val: `${pumpHp} اسب بخار` },
+          { label: 'قطر فیلتر شنی سیلیسی', val: `${sandFilterDia} اینچ` },
+          { label: 'ظرفیت دیگ/مبدل حرارتی', val: `${boilerKcal.toLocaleString('fa-IR')} kcal` }
+        ],
+        formula: 'محاسبه افت فشار دینامیکی مسیر لوله‌کشی و جبران افت حرارتی با راندمان ۸۵٪.'
+      };
+    }
+  },
+
+  // === 4. بخش تأسیسات (MEP) ===
+  {
+    id: 'mep_hvac',
+    cat: 'mep',
+    title: 'متره بار گرمایش/سرمایش (پکیج، رادیاتور، داکت)',
+    icon: '❄️',
+    inputs: [
+      { id: 'area', label: 'زیربنای مفید فضای تهویه', def: 140, unit: 'مترمربع', step: 10 },
+      { id: 'climate', label: 'اقلیم جغرافیایی', def: 'moderate', select: [
+        {val:'moderate', text:'معتدل (تهران/کرج - 130 kcal/m²)'},
+        {val:'cold', text:'کوهستانی و سرد (تبریز/اردبیل - 170 kcal/m²)'},
+        {val:'hot', text:'گرمسیری (اهواز/بندر - 210 kcal/m²)'}
+      ]}
+    ],
+    calc: (v) => {
+      const heatCoeff = v.climate === 'cold' ? 170 : v.climate === 'hot' ? 100 : 130;
+      const coolCoeff = v.climate === 'hot' ? 550 : 380;
+      const totalKcal = Math.round(v.area * heatCoeff);
+      const radiatorBlades = Math.ceil(totalKcal / 135);
+      const ductTon = (v.area * coolCoeff / 12000).toFixed(1);
+      const packageKw = (totalKcal / 860).toFixed(1);
+      return {
+        items: [
+          { label: 'ظرفیت پکیج گرمایشی', val: `${packageKw} kW (${Math.round(packageKw)} هزار)` },
+          { label: 'پره رادیاتور آلومینیومی', val: `${radiatorBlades} پره` },
+          { label: 'تناژ داکت اسپلیت / چیلر', val: `${ductTon} تن تبرید` }
+        ],
+        formula: 'بر اساس بار حرارتی پیک زمستانه و بار برودتی تابستانه طبق نشریه ۱۲۸ مقررات ملی.'
+      };
+    }
+  },
+  {
+    id: 'mep_underfloor',
+    cat: 'mep',
+    title: 'متره سیستم گرمایش از کف (لوله، عایق، کلکتور)',
+    icon: '♨️',
+    inputs: [
+      { id: 'area', label: 'مساحت خالص گرمایش', def: 90, unit: 'مترمربع', step: 5 },
+      { id: 'pitch', label: 'فاصله محور لوله‌ها (Pitch)', def: 15, unit: 'cm', select: [{val:10, text:'۱۰ سانتی‌متر (نواحی سرد)'}, {val:15, text:'۱۵ سانتی‌متر (استاندارد)'}, {val:20, text:'۲۰ سانتی‌متر'}] }
+    ],
+    calc: (v) => {
+      const pipePerM2 = 100 / v.pitch;
+      const totalPipeM = Math.round(v.area * pipePerM2 * 1.12);
+      const loopsCount = Math.ceil(totalPipeM / 85);
+      const xpsSheets = Math.ceil(v.area * 1.05 / 0.72);
+      return {
+        items: [
+          { label: 'متراژ لوله ۵ لایه PEX-AL-PEX', val: `${totalPipeM} متر` },
+          { label: 'تعداد مدارهای کلکتور', val: `${loopsCount} انشعاب` },
+          { label: 'عایق یونولیت شانه‌تخم‌مرغی', val: `${xpsSheets} پانل` },
+          { label: 'نوار عایق پیرامونی (فوم لبه)', val: `${Math.round(Math.sqrt(v.area) * 4 * 1.1)} متر` }
+        ],
+        formula: 'حداکثر طول هر لوپ ۸۵ تا ۹۰ متر برای جلوگیری از افت فشار هیدرولیکی مفرط.'
+      };
+    }
+  },
+  {
+    id: 'mep_electrical',
+    cat: 'mep',
+    title: 'متره تأسیسات برقی و سیم‌کشی ساختمان',
+    icon: '⚡',
+    inputs: [
+      { id: 'area', label: 'زیربنای واحد مسکونی', def: 120, unit: 'مترمربع', step: 10 },
+      { id: 'points', label: 'تعداد سرچراغ و کلیدپریز', def: 45, unit: 'نقطه', step: 5 }
+    ],
+    calc: (v) => {
+      const wire15M = Math.round(v.area * 2.8);
+      const wire25M = Math.round(v.area * 3.4);
+      const pvcPipeM = Math.round(v.area * 3.8);
+      const boxes = Math.ceil(v.points * 1.25);
+      return {
+        items: [
+          { label: 'سیم تک‌رشته ۱.۵ (روشنایی)', val: `${wire15M} متر` },
+          { label: 'سیم تک‌رشته ۲.۵ (پریز)', val: `${wire25M} متر` },
+          { label: 'لوله خرطومی / PVC نسوز', val: `${pvcPipeM} متر` },
+          { label: 'قوطی کلید شاپوری', val: `${boxes} عدد` }
+        ],
+        formula: 'بر اساس مبحث سیزدهم مقررات ملی ساختمان و استانداردهای سیم‌کشی توکار.'
+      };
+    }
+  },
+
+  // === 5. بخش راه ===
+  {
+    id: 'road_asphalt',
+    cat: 'road',
+    title: 'متره آسفالت راه (توپکا، بیندر، تناژ، مساحت)',
+    icon: '🛣️',
+    inputs: [
+      { id: 'len', label: 'طول مسیر راه', def: 1000, unit: 'متر', step: 50 },
+      { id: 'width', label: 'عرض سواره‌رو', def: 7.3, unit: 'متر', step: 0.1 },
+      { id: 'thick', label: 'ضخامت لایه کوبیده شده', def: 6, unit: 'سانتی‌متر', step: 1 },
+      { id: 'density', label: 'وزن مخصوص متراکم آسفالت', def: 2.35, unit: 'تن/م³', step: 0.05 }
+    ],
+    calc: (v) => {
+      const areaM2 = (v.len * v.width).toFixed(0);
+      const volM3 = (areaM2 * (v.thick / 100)).toFixed(1);
+      const asphaltTon = (volM3 * v.density * 1.03).toFixed(1);
+      const bitumenTon = (asphaltTon * 0.052).toFixed(2);
+      return {
+        items: [
+          { label: 'مساحت کل پخش آسفالت', val: `${Number(areaM2).toLocaleString('fa-IR')} م²` },
+          { label: 'حجم بتن آسفالتی کوبیده', val: `${volM3} م³` },
+          { label: 'تناژ کل آسفالت حمل‌شده', val: `${asphaltTon} تن` },
+          { label: 'برآورد قیر خالص (۶۰/۷۰)', val: `${bitumenTon} تن` }
+        ],
+        formula: 'محاسبه طبق مشخصات فنی عمومی راه (نشریه ۱۰۱) با دانسیته مارشال ۲.۳۵ تن بر مترمکعب.'
+      };
+    }
+  },
+  {
+    id: 'road_subbase',
+    cat: 'road',
+    title: 'متره زیرسازی راه (ساب‌بیس، بیس، تراکم)',
+    icon: '🚜',
+    inputs: [
+      { id: 'len', label: 'طول قطعه راه', def: 1000, unit: 'متر', step: 50 },
+      { id: 'width', label: 'عرض بستر پخش مصالح', def: 8.5, unit: 'متر', step: 0.2 },
+      { id: 'thick', label: 'ضخامت قشر فشرده', def: 15, unit: 'سانتی‌متر', step: 5 }
+    ],
+    calc: (v) => {
+      const compactVol = (v.len * v.width * (v.thick / 100)).toFixed(1);
+      const looseVol = (compactVol * 1.25).toFixed(1);
+      const tonBase = (compactVol * 2.15).toFixed(1);
+      return {
+        items: [
+          { label: 'حجم کوبیده شده (متراکم)', val: `${compactVol} م³` },
+          { label: 'حجم بارگیری و دپو مصالح', val: `${looseVol} م³` },
+          { label: 'تناژ مصالح شکسته بیس', val: `${tonBase} تن` }
+        ],
+        formula: 'تراکم ۹۵ الی ۱۰۰ درصد پروکتور اصلاح‌شده با ضریب کوبیدگی ۱.۲۵.'
+      };
+    }
+  },
+  {
+    id: 'road_bitumen',
+    cat: 'road',
+    title: 'متره قیرپاشی نفوذی و سطحی (پریم‌کت و تک‌کت)',
+    icon: '🛢️',
+    inputs: [
+      { id: 'area', label: 'مساحت کل پخش', def: 7500, unit: 'مترمربع', step: 200 },
+      { id: 'type', label: 'نوع قیرپاشی', def: 'prime', select: [
+        {val:'prime', text:'پریم‌کت نفوذی روی بیس (۱.۲ kg/m²)'},
+        {val:'tack', text:'تک‌کت چسبندگی بین دو لایه آسفالت (۰.۴ kg/m²)'}
+      ]}
+    ],
+    calc: (v) => {
+      const rate = v.type === 'prime' ? 1.2 : 0.4;
+      const bitumenTon = (v.area * rate / 1000).toFixed(2);
+      const barrels = Math.ceil(v.area * rate / 180);
+      return {
+        items: [
+          { label: 'وزن کل قیر محلول/امولسیون', val: `${bitumenTon} تن` },
+          { label: 'تعداد بشکه معادل', val: `${barrels} بشکه` }
+        ],
+        formula: 'پریم‌کت با قیر محلول MC-250 و تک‌کت با قیر امولسیونی سریع‌شکن CRS.'
+      };
+    }
+  },
+
+  // === 6. بخش پل ===
+  {
+    id: 'bridge_deck',
+    cat: 'bridge',
+    title: 'متره پل (عرشه، پایه‌ها، کوله‌ها و شمع)',
+    icon: '🌉',
+    inputs: [
+      { id: 'spans', label: 'تعداد دهانه‌های پل', def: 3, unit: 'دهانه', step: 1 },
+      { id: 'spanLen', label: 'طول هر دهانه', def: 25, unit: 'متر', step: 2 },
+      { id: 'width', label: 'عرض مفید عرشه', def: 12, unit: 'متر', step: 0.5 },
+      { id: 'pierHeight', label: 'ارتفاع متوسط پایه‌ها', def: 8, unit: 'متر', step: 1 }
+    ],
+    calc: (v) => {
+      const totalLen = v.spans * v.spanLen;
+      const deckConcM3 = (totalLen * v.width * 0.45).toFixed(1);
+      const piersConcM3 = ((v.spans - 1) * 2 * (Math.PI * 0.75 * 0.75 * v.pierHeight)).toFixed(1);
+      const abutmentConcM3 = (2 * (v.width * 5 * 1.5)).toFixed(1);
+      const totalConcM3 = (parseFloat(deckConcM3) + parseFloat(piersConcM3) + parseFloat(abutmentConcM3)).toFixed(1);
+      const rebarTon = (totalConcM3 * 110 / 1000).toFixed(1);
+      return {
+        items: [
+          { label: 'طول کل سازه پل', val: `${totalLen} متر` },
+          { label: 'بتن دال عرشه C35', val: `${deckConcM3} م³` },
+          { label: 'بتن پایه‌ها و ستون‌ها', val: `${piersConcM3} م³` },
+          { label: 'بتن کوله‌های دو سر پل', val: `${abutmentConcM3} م³` },
+          { label: 'میلگرد کل سازه پل', val: `${rebarTon} تن` }
+        ],
+        formula: 'محاسبه بتن سازه‌ای پرمقاومت رده C35 و آرماتور مصرفی ۱۱۰ الی ۱۲۰ کیلو در مترمکعب بتن.'
+      };
+    }
+  },
+
+  // === 7. بخش تونل ===
+  {
+    id: 'tunnel_excav',
+    cat: 'tunnel',
+    title: 'متره حفاری و لاینینگ تونل (مقطع نعل‌اسبی، شاتکریت)',
+    icon: '🚇',
+    inputs: [
+      { id: 'length', label: 'طول قطعه تونل', def: 200, unit: 'متر', step: 20 },
+      { id: 'radius', label: 'شعاع مقطع تونل', def: 4.5, unit: 'متر', step: 0.5 },
+      { id: 'shotThick', label: 'ضخامت شاتکریت اولیه', def: 15, unit: 'cm', step: 5 }
+    ],
+    calc: (v) => {
+      const crossSecArea = (1.57 * Math.pow(v.radius, 2) + 2 * v.radius * 2.5).toFixed(1);
+      const totalExcavM3 = (crossSecArea * v.length).toFixed(0);
+      const perimM = (3.14 * v.radius + 2 * 2.5).toFixed(1);
+      const shotcreteVol = (perimM * v.length * (v.shotThick / 100) * 1.20).toFixed(1);
+      return {
+        items: [
+          { label: 'مساحت مقطع حفاری', val: `${crossSecArea} م²` },
+          { label: 'حجم کل حفاری تونل', val: `${Number(totalExcavM3).toLocaleString('fa-IR')} م³` },
+          { label: 'محیط نگهداری مقطع', val: `${perimM} متر` },
+          { label: 'شاتکریت با احتساب ۲۰٪ ریباند', val: `${shotcreteVol} م³` }
+        ],
+        formula: 'طراحی نگهداری اولیه طبق روش اتریشی NATM با لحاظ بازگشت (ریباند) شاتکریت.'
+      };
+    }
+  },
+
+  // === 8. بخش سد ===
+  {
+    id: 'dam_concrete',
+    cat: 'dam',
+    title: 'متره بتن سد وزنی و بتن غلطکی (RCC)',
+    icon: '🏔️',
+    inputs: [
+      { id: 'height', label: 'ارتفاع سد از پی', def: 45, unit: 'متر', step: 5 },
+      { id: 'crestLen', label: 'طول تاج سد', def: 180, unit: 'متر', step: 10 },
+      { id: 'crestWidth', label: 'عرض تاج', def: 6, unit: 'متر', step: 1 },
+      { id: 'baseWidth', label: 'عرض کف در پی', def: 35, unit: 'متر', step: 2 }
+    ],
+    calc: (v) => {
+      const crossArea = ((v.crestWidth + v.baseWidth) / 2 * v.height).toFixed(1);
+      const totalVolM3 = Math.round(crossArea * v.crestLen * 0.65);
+      const totalTon = (totalVolM3 * 2.4).toFixed(0);
+      const cementTon = Math.round(totalVolM3 * 0.18);
+      return {
+        items: [
+          { label: 'مساحت مقطع ذوزنقه‌ای', val: `${crossArea} م²` },
+          { label: 'حجم کل بتن‌ریزی بدنه', val: `${totalVolM3.toLocaleString('fa-IR')} م³` },
+          { label: 'وزن کل سازه سد', val: `${Number(totalTon).toLocaleString('fa-IR')} تن` },
+          { label: 'سیمان پوزولانی مورد نیاز', val: `${cementTon.toLocaleString('fa-IR')} تن` }
+        ],
+        formula: 'مقطع سد بتنی غلطکی RCC با پوزولان برای کنترل حرارت هیدراتاسیون بتن حجمی.'
+      };
+    }
+  },
+
+  // === 9. بخش سوله و سازه‌های صنعتی ===
+  {
+    id: 'shed_steel',
+    cat: 'shed',
+    title: 'متره اسکلت سوله صنعتی تیرورق (تیر، ستون، پرلین)',
+    icon: '🏭',
+    inputs: [
+      { id: 'span', label: 'دهانه سوله (عرض)', def: 20, unit: 'متر', step: 2 },
+      { id: 'len', label: 'طول سالن سوله', def: 48, unit: 'متر', step: 6 },
+      { id: 'height', label: 'ارتفاع ستون در کناره', def: 6.5, unit: 'متر', step: 0.5 },
+      { id: 'hasCrane', label: 'دارای جرثقیل سقفی', def: 'yes', select: [{val:'yes', text:'بله (۵ الی ۱۰ تن)'}, {val:'no', text:'خیر'}] }
+    ],
+    calc: (v) => {
+      const areaM2 = v.span * v.len;
+      const rate = v.hasCrane === 'yes' ? 42 : 32;
+      const totalSteelKg = areaM2 * rate;
+      const purlinTon = (areaM2 * 8.5 / 1000).toFixed(1);
+      const roofCoverM2 = (areaM2 * 1.08).toFixed(1);
+      const concretePiersM3 = (Math.ceil(v.len / 6 + 1) * 2 * 2.2).toFixed(1);
+      return {
+        items: [
+          { label: 'مساحت زیربنای سوله', val: `${areaM2} م²` },
+          { label: 'وزن کل اسکلت تیرورق', val: `${(totalSteelKg / 1000).toFixed(1)} تن` },
+          { label: 'پروفیل زد پرلین سقف', val: `${purlinTon} تن` },
+          { label: 'پوشش ساندویچ پانل سقف', val: `${roofCoverM2} م²` },
+          { label: 'بتن فونداسیون‌های منفرد', val: `${concretePiersM3} م³` }
+        ],
+        formula: 'فواصل قاب‌ها ۶ متر، شیب سقف ۱۵٪ و مقطع متغیر تپر (Tapered) بهینه.'
+      };
+    }
+  },
+
+  // === 10. بخش ابزارهای کمکی و محاسباتی ===
+  {
+    id: 'tool_rebar_weight',
+    cat: 'tools',
+    title: 'محاسبه‌گر وزن میلگرد بر اساس قطر و طول',
+    icon: '📏',
+    inputs: [
+      { id: 'dia', label: 'سایز میلگرد (قطر mm)', def: 16, unit: 'mm', select: [
+        {val:8, text:'فی ۸'}, {val:10, text:'فی ۱۰'}, {val:12, text:'فی ۱۲'},
+        {val:14, text:'فی ۱۴'}, {val:16, text:'فی ۱۶'}, {val:18, text:'فی ۱۸'},
+        {val:20, text:'فی ۲۰'}, {val:22, text:'فی ۲۲'}, {val:25, text:'فی ۲۵'},
+        {val:28, text:'فی ۲۸'}, {val:32, text:'فی ۳۲'}
+      ]},
+      { id: 'len', label: 'طول کل میلگرد', def: 120, unit: 'متر', step: 12 }
+    ],
+    calc: (v) => {
+      const weightPerMeter = (Math.pow(v.dia, 2) / 162).toFixed(3);
+      const totalWeightKg = (weightPerMeter * v.len).toFixed(1);
+      const branches12m = (v.len / 12).toFixed(1);
+      return {
+        items: [
+          { label: 'وزن هر متر طول', val: `${weightPerMeter} kg/m` },
+          { label: 'وزن کل میلگردها', val: `${totalWeightKg} کیلوگرم` },
+          { label: 'معادل شاخه ۱۲ متری', val: `${branches12m} شاخه` }
+        ],
+        formula: 'فرمول دقیق استاندارد دین و اشتال: W = d² / 162 (کیلوگرم بر متر).'
+      };
+    }
+  },
+  {
+    id: 'tool_contractor_factors',
+    cat: 'tools',
+    title: 'ماشین‌حساب ضرایب پیمانکاری و صورت‌وضعیت',
+    icon: '💰',
+    inputs: [
+      { id: 'baseAmount', label: 'مبلغ برآورد پایه بر اساس فهرست بها', def: 100000000, unit: 'ریال', step: 10000000 },
+      { id: 'overhead', label: 'ضریب بالاسری', def: 1.30, select: [{val:1.30, text:'۱.۳۰ (کارهای طرح عمرانی)'}, {val:1.41, text:'۱.۴۱ (کارهای غیرعمرانی)'}] },
+      { id: 'zoneFactor', label: 'ضریب منطقه', def: 1.05, unit: 'ضریب', step: 0.01 },
+      { id: 'floorFactor', label: 'ضریب طبقات', def: 1.02, unit: 'ضریب', step: 0.01 },
+      { id: 'offerFactor', label: 'ضریب پیشنهادی پیمانکار (پلوس/مینوس)', def: 1.00, step: 0.02 }
+    ],
+    calc: (v) => {
+      const totalFactor = (v.overhead * v.zoneFactor * v.floorFactor * v.offerFactor).toFixed(4);
+      const finalAmount = Math.round(v.baseAmount * totalFactor);
+      const vat10 = Math.round(finalAmount * 0.10);
+      return {
+        items: [
+          { label: 'ضریب کل پیمانکاری', val: `${totalFactor}` },
+          { label: 'مبلغ قابل پرداخت', val: `${finalAmount.toLocaleString('fa-IR')} ریال` },
+          { label: 'مالیات بر ارزش افزوده (۱۰٪)', val: `${vat10.toLocaleString('fa-IR')} ریال` },
+          { label: 'جمع کل با ارزش افزوده', val: `${(finalAmount + vat10).toLocaleString('fa-IR')} ریال` }
+        ],
+        formula: 'محاسبه پیوسته ضرایب طبق دستورالعمل نظام فنی و اجرایی کشور.'
+      };
+    }
+  },
+  {
+    id: 'tool_tank_vol',
+    cat: 'tools',
+    title: 'محاسبه حجم و ظرفیت انواع مخازن (مکعب، استوانه)',
+    icon: '🛢️',
+    inputs: [
+      { id: 'shape', label: 'شکل هندسی مخزن', def: 'cyl', select: [{val:'cyl', text:'استوانه ایستاده'}, {val:'box', text:'مکعب مستطیل'}] },
+      { id: 'dim1', label: 'قطر یا طول مخزن', def: 2, unit: 'متر', step: 0.2 },
+      { id: 'dim2', label: 'عرض مخزن (برای مکعب)', def: 2, unit: 'متر', step: 0.2 },
+      { id: 'height', label: 'ارتفاع مخزن', def: 3, unit: 'متر', step: 0.2 }
+    ],
+    calc: (v) => {
+      let volM3 = 0;
+      if (v.shape === 'cyl') {
+        const r = v.dim1 / 2;
+        volM3 = Math.PI * Math.pow(r, 2) * v.height;
+      } else {
+        volM3 = v.dim1 * v.dim2 * v.height;
+      }
+      const lit = Math.round(volM3 * 1000);
+      return {
+        items: [
+          { label: 'حجم مخزن به مترمکعب', val: `${volM3.toFixed(2)} م³` },
+          { label: 'ظرفیت آبگیری به لیتر', val: `${lit.toLocaleString('fa-IR')} لیتر` }
+        ],
+        formula: 'محاسبه حجم هندسی با لحاظ دانسیته آب ۱۰۰۰ لیتر در هر مترمکعب.'
+      };
+    }
+  }
+];
+
+// --- RENDER ALL CARDS ---
+let activeCategory = 'all';
+
+function renderCards() {
+  const container = document.getElementById('cardsGrid');
+  const searchVal = document.getElementById('searchInput').value.trim().toLowerCase();
+  container.innerHTML = '';
+
+  let count = 0;
+  CALCULATORS.forEach(item => {
+    const matchesCat = (activeCategory === 'all' || item.cat === activeCategory);
+    const matchesSearch = !searchVal || 
+      item.title.toLowerCase().includes(searchVal) || 
+      item.cat.toLowerCase().includes(searchVal);
+
+    if (matchesCat && matchesSearch) {
+      count++;
+      const card = document.createElement('div');
+      card.className = 'calc-card';
+      card.id = `card_${item.id}`;
+      card.setAttribute('data-id', item.id);
+
+      let inputsHtml = '';
+      item.inputs.forEach(inp => {
+        let fieldHtml = '';
+        if (inp.select) {
+          fieldHtml = `
+            <div class="input-wrapper">
+              <select id="${item.id}_${inp.id}" onchange="calculate('${item.id}')">
+                ${inp.select.map(opt => `<option value="${opt.val}" ${opt.val == inp.def ? 'selected' : ''}>${opt.text}</option>`).join('')}
+              </select>
+            </div>
+          `;
+        } else {
+          fieldHtml = `
+            <div class="input-wrapper">
+              <input type="number" id="${item.id}_${inp.id}" value="${inp.def}" step="${inp.step || 1}" oninput="calculate('${item.id}')">
+              ${inp.unit ? `<span class="input-unit">${inp.unit}</span>` : ''}
+            </div>
+          `;
+        }
+        inputsHtml += `
+          <div class="input-field">
+            <label>${inp.label}</label>
+            ${fieldHtml}
+          </div>
+        `;
+      });
+
+      card.innerHTML = `
+        <div class="card-header" onclick="toggleCard('${item.id}')">
+          <div class="card-header-main">
+            <div class="card-icon">${item.icon}</div>
+            <div class="card-title-group">
+              <h3>${item.title}</h3>
+              <span class="card-tag">${getCatPersian(item.cat)}</span>
+            </div>
+          </div>
+          <span class="toggle-icon">▼</span>
+        </div>
+        <div class="card-body">
+          <div class="inputs-grid">
+            ${inputsHtml}
+          </div>
+          <div class="card-actions">
+            <button class="btn btn-primary" onclick="calculate('${item.id}')">
+              <span>⚡</span> محاسبه مجدد
+            </button>
+            <button class="btn btn-outline" onclick="copyResult('${item.id}')">
+              <span>📋</span> کپی نتیجه
+            </button>
+            <button class="btn btn-orange" onclick="shareResult('${item.id}')">
+              <span>📤</span> اشتراک‌گذاری
+            </button>
+          </div>
+          <div class="result-box" id="res_${item.id}"></div>
+        </div>
+      `;
+      container.appendChild(card);
+    }
+  });
+
+  document.getElementById('calcCountText').innerText = `${count} ماشین‌حساب فعال`;
+}
+
+function getCatPersian(cat) {
+  const map = {
+    building: 'ساختمان',
+    villa: 'ویلا و دوبلکس',
+    pool: 'استخر',
+    mep: 'تأسیسات',
+    road: 'راه',
+    bridge: 'پل',
+    tunnel: 'تونل',
+    dam: 'سد',
+    shed: 'سوله',
+    tools: 'ابزارها'
+  };
+  return map[cat] || cat;
+}
+
+// --- CARD ACCORDION ---
+function toggleCard(id) {
+  const card = document.getElementById(`card_${id}`);
+  if (!card) return;
+  const wasOpen = card.classList.contains('open');
+  card.classList.toggle('open');
+  if (!wasOpen) {
+    calculate(id);
+  }
+}
+
+// --- CALCULATION ENGINE ---
+function calculate(id) {
+  try {
+    const item = CALCULATORS.find(c => c.id === id);
+    if (!item) return;
+
+    const vals = {};
+    item.inputs.forEach(inp => {
+      const el = document.getElementById(`${id}_${inp.id}`);
+      if (el) {
+        vals[inp.id] = inp.select ? el.value : (parseFloat(el.value) || 0);
+      }
+    });
+
+    const res = item.calc(vals, projectProfile);
+    const resBox = document.getElementById(`res_${id}`);
+    if (!resBox) return;
+
+    let itemsHtml = res.items.map(it => `
+      <div class="result-item">
+        <div class="result-item-label">${it.label}</div>
+        <div class="result-item-val">${it.val}</div>
+      </div>
+    `).join('');
+
+    resBox.innerHTML = `
+      <div class="result-header">
+        <span class="result-title">📊 نتایج برآورد دقیق</span>
+        <button class="btn btn-outline" style="padding:2px 8px; font-size:11px;" onclick="saveToHistory('${id}')">💾 ذخیره در سوابق</button>
+      </div>
+      <div class="result-items">${itemsHtml}</div>
+      ${res.formula ? `<div class="formula-exp">💡 <strong>توضیح فنی:</strong> ${res.formula}</div>` : ''}
+    `;
+  } catch (err) {
+    console.error(`Calculation error in ${id}`, err);
+  }
+}
+
+// --- COPY & SHARE RESULTS ---
+function getResultText(id) {
+  const item = CALCULATORS.find(c => c.id === id);
+  const resBox = document.getElementById(`res_${id}`);
+  if (!item || !resBox) return '';
+  let txt = `🏗️ ${item.title}\n`;
+  const items = resBox.querySelectorAll('.result-item');
+  items.forEach(it => {
+    const lbl = it.querySelector('.result-item-label').innerText;
+    const val = it.querySelector('.result-item-val').innerText;
+    txt += `• ${lbl}: ${val}\n`;
+  });
+  txt += `\nطراحی و توسعه: مهندس نیما صیدی قمشه\nنرم‌افزار متره و برآورد عمران`;
+  return txt;
+}
+
+function copyResult(id) {
+  const text = getResultText(id);
+  if (!text) return;
+  navigator.clipboard.writeText(text).then(() => {
+    showToast('نتایج با موفقیت در کلیپ‌بورد کپی شد.');
+  }).catch(() => {
+    showToast('خطا در کپی نتایج.');
+  });
+}
+
+function shareResult(id) {
+  const text = getResultText(id);
+  if (!text) return;
+  if (navigator.share) {
+    navigator.share({
+      title: 'نتایج متره و برآورد',
+      text: text
+    }).catch(() => {});
+  } else {
+    copyResult(id);
+  }
+}
+
+// --- HISTORY LOGIC (LocalStorage) ---
+function saveToHistory(id) {
+  const item = CALCULATORS.find(c => c.id === id);
+  const resBox = document.getElementById(`res_${id}`);
+  if (!item || !resBox) return;
+
+  const history = JSON.parse(localStorage.getItem('civil_calc_history') || '[]');
+  const record = {
+    id: Date.now(),
+    title: item.title,
+    date: new Date().toLocaleDateString('fa-IR'),
+    summary: Array.from(resBox.querySelectorAll('.result-item')).map(it => ({
+      lbl: it.querySelector('.result-item-label').innerText,
+      val: it.querySelector('.result-item-val').innerText
+    }))
+  };
+  history.unshift(record);
+  if (history.length > 30) history.pop();
+  localStorage.setItem('civil_calc_history', JSON.stringify(history));
+  showToast('نتیجه در سوابق ذخیره شد.');
+}
+
+function openHistoryModal() {
+  const list = document.getElementById('historyList');
+  const history = JSON.parse(localStorage.getItem('civil_calc_history') || '[]');
+  if (history.length === 0) {
+    list.innerHTML = `<div style="text-align:center; color:#94a3b8; padding:30px 10px;">هنوز محاسبه‌ای ذخیره نشده است.</div>`;
+  } else {
+    list.innerHTML = history.map(h => `
+      <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:12px; margin-bottom:10px;">
+        <div style="display:flex; justify-content:space-between; margin-bottom:6px;">
+          <strong style="color:var(--primary); font-size:13px;">${h.title}</strong>
+          <span style="font-size:11px; color:#64748b;">${h.date}</span>
+        </div>
+        <div style="font-size:12px; color:#334155;">
+          ${h.summary.map(s => `<div>${s.lbl}: <strong style="color:var(--orange);">${s.val}</strong></div>`).join('')}
+        </div>
+      </div>
+    `).join('');
+  }
+  document.getElementById('historyModal').classList.add('open');
+}
+
+function closeHistoryModal() {
+  document.getElementById('historyModal').classList.remove('open');
+}
+
+function clearHistory() {
+  localStorage.removeItem('civil_calc_history');
+  openHistoryModal();
+  showToast('تاریخچه پاکسازی شد.');
+}
+
+// --- ABOUT MODAL ---
+function openAboutModal() {
+  document.getElementById('aboutModal').classList.add('open');
+}
+function closeAboutModal() {
+  document.getElementById('aboutModal').classList.remove('open');
+}
+
+// --- SEARCH & CATEGORY CHIPS EVENT LISTENERS ---
+document.getElementById('searchInput').addEventListener('input', () => {
+  renderCards();
+});
+
+document.querySelectorAll('.cat-chip').forEach(chip => {
+  chip.addEventListener('click', () => {
+    document.querySelectorAll('.cat-chip').forEach(c => c.classList.remove('active'));
+    chip.classList.add('active');
+    activeCategory = chip.getAttribute('data-cat');
+    if (activeCategory === 'profile') {
+      document.getElementById('projectProfileCard').scrollIntoView({ behavior: 'smooth' });
+    } else {
+      renderCards();
+    }
+  });
+});
+
+function switchNav(type) {
+  if (type === 'profile') {
+    document.getElementById('projectProfileCard').scrollIntoView({ behavior: 'smooth' });
+    const body = document.getElementById('profileBody');
+    if (body) body.style.display = 'block';
+  } else {
+    activeCategory = 'all';
+    document.querySelectorAll('.cat-chip').forEach(c => {
+      c.classList.toggle('active', c.getAttribute('data-cat') === 'all');
+    });
+    renderCards();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+}
+
+// --- INITIALIZE ON SCRIPT LOAD ---
+try {
+  renderCards();
+  setTimeout(() => {
+    const firstCard = document.querySelector('.calc-card');
+    if (firstCard) {
+      const id = firstCard.getAttribute('data-id');
+      if (id) toggleCard(id);
+    }
+  }, 300);
+} catch (e) {
+  console.error('Initialization error', e);
+}
+</script>
+</body>
+</html>
