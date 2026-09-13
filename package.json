@@ -1,9 +1,16 @@
 {
-  "name": "app-name",
+  "name": "omran-app",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.1",
   "type": "module",
   "scripts": {
     "build": "echo no build step"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.0",
+    "@capacitor/cli": "^6.0.0",
+    "@capacitor/core": "^6.0.0",
+    "@capacitor/android": "^6.0.0",
+    "@capacitor/assets": "^3.0.0"
   }
 }
